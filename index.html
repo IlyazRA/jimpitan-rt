@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Jimpitan Ronda RT 13</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Supabase JS Client v2 via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- File Konfigurasi -->
+  <script src="config.js"></script>
+
+  <style>
+    /* Smooth transitions and touch enhancements */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 antialiased font-sans flex flex-col items-center justify-start p-3 sm:p-4">
+
+  <!-- Mobile Card Container -->
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200/80 my-auto">
+    
+    <!-- Top Header -->
+    <div class="bg-gradient-to-r from-emerald-600 to-teal-700 p-5 text-white shadow-md relative">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/30 text-emerald-100 backdrop-blur-sm mb-1.5 border border-emerald-400/30">
+            <svg class="w-3 h-3 text-emerald-300" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            Sistem Ronda RT
+          </span>
+          <h1 id="headerTitle" class="text-xl font-bold tracking-tight">Ronda Warga RT 13</h1>
+          <p id="headerSubtitle" class="text-xs text-emerald-100/90 mt-0.5">Pencatatan Jimpitan Mandiri via QR Code</p>
+        </div>
+        <div class="w-11 h-11 bg-white/15 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Banner Demo/Mock Mode jika Kredensial Kosong -->
+      <div id="mockBanner" class="hidden mt-3 bg-amber-500/20 border border-amber-300/40 rounded-lg p-2.5 text-xs text-amber-100 flex items-start gap-2">
+        <svg class="w-4 h-4 text-amber-300 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        <div>
+          <span class="font-semibold text-white">Mode Demo Lokal:</span> Supabase URL belum diisi di <code class="bg-black/30 px-1 py-0.5 rounded">config.js</code>. Menggunakan data simulasi.
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Body -->
+    <div class="p-5 space-y-4">
+
+      <!-- Section 1: Identitas Rumah (Warga) -->
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 transition-all">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            Identitas Rumah
+          </span>
+          <span id="houseBadge" class="bg-emerald-100 text-emerald-800 text-xs font-mono font-bold px-2.5 py-0.5 rounded-md border border-emerald-300">
+            Memuat...
+          </span>
+        </div>
+
+        <!-- Skeleton Loading State -->
+        <div id="wargaLoading" class="animate-pulse space-y-2 py-1">
+          <div class="h-5 bg-slate-200 rounded w-3/4"></div>
+          <div class="h-3 bg-slate-200 rounded w-1/2"></div>
+        </div>
+
+        <!-- Data Warga Terpilih -->
+        <div id="wargaInfo" class="hidden space-y-1">
+          <h2 id="wargaNama" class="text-lg font-bold text-slate-800 leading-tight">Nama Pemilik Rumah</h2>
+          <p id="wargaAlamat" class="text-xs text-slate-500 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span id="wargaAlamatText">Alamat Rumah</span>
+          </p>
+        </div>
+
+        <!-- Error State jika Rumah Tidak Ditemukan / Tidak Ada Param -->
+        <div id="wargaNotFound" class="hidden py-1">
+          <div class="flex items-center gap-2 text-amber-700 bg-amber-50 p-2.5 rounded-lg border border-amber-200 text-xs mb-2">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span id="wargaErrorMessage">Parameter ID rumah tidak ditemukan pada URL (?id=...).</span>
+          </div>
+
+          <!-- Input Manual ID Rumah untuk Testing -->
+          <div class="flex gap-2">
+            <input type="text" id="manualHouseId" placeholder="Masukkan ID (contoh: A-01)" 
+                   class="flex-1 px-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono uppercase">
+            <button type="button" id="btnCariRumah" 
+                    class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold transition-colors">
+              Cek
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-500">
+            Contoh mock: <a href="?id=A-01" class="text-emerald-600 underline font-medium">A-01</a>, <a href="?id=A-02" class="text-emerald-600 underline font-medium">A-02</a>, <a href="?id=B-01" class="text-emerald-600 underline font-medium">B-01</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Pencatatan Jimpitan -->
+      <form id="formJimpitan" class="space-y-4" onsubmit="return false;">
+        
+        <!-- Section 2: Identitas Petugas Ronda (Auto-saved via localStorage) -->
+        <div>
+          <label for="namaPetugas" class="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Nama Petugas Ronda
+            </span>
+            <span class="text-[10px] text-slate-400 font-normal">Tersimpan di HP ini</span>
+          </label>
+          <input type="text" id="namaPetugas" required placeholder="Contoh: Pak Agus / Mas Budi" 
+                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm font-medium transition-all shadow-sm">
+        </div>
+
+        <!-- Section 3: Nominal Jimpitan -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Pilihan Nominal
+            </label>
+            <span class="text-[10px] text-slate-500">Boleh 0 jika warga absen/dobel nanti</span>
+          </div>
+
+          <!-- Quick Nominal Buttons (Pills) -->
+          <div class="grid grid-cols-5 gap-1.5 mb-2.5" id="quickAmountsContainer">
+            <!-- 0 (Nihil) -->
+            <button type="button" data-val="0" class="btn-quick py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-400 active:scale-95">
+              0<br><span class="text-[9px] font-normal text-slate-500">Nihil</span>
+            </button>
+            <!-- 500 -->
+            <button type="button" data-val="500" class="btn-quick py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all border-slate-200 bg-slate-50 text-slate-700 hover:border-emerald-400 active:scale-95">
+              500
+            </button>
+            <!-- 1000 -->
+            <button type="button" data-val="1000" class="btn-quick py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all border-slate-200 bg-slate-50 text-slate-700 hover:border-emerald-400 active:scale-95">
+              1.000
+            </button>
+            <!-- 2000 (Default) -->
+            <button type="button" data-val="2000" class="btn-quick py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all border-emerald-500 bg-emerald-50 text-emerald-700 ring-2 ring-emerald-500/20 active:scale-95">
+              2.000
+            </button>
+            <!-- 5000 -->
+            <button type="button" data-val="5000" class="btn-quick py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all border-slate-200 bg-slate-50 text-slate-700 hover:border-emerald-400 active:scale-95">
+              5.000
+            </button>
+          </div>
+
+          <!-- Input Manual Nominal -->
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 font-bold text-sm">
+              Rp
+            </div>
+            <input type="number" id="inputNominal" min="0" step="100" value="2000" required 
+                   placeholder="0"
+                   class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-base font-bold text-slate-800 transition-all shadow-sm">
+          </div>
+
+          <!-- Pesan Error Validasi Nominal -->
+          <p id="errorNominal" class="hidden mt-1.5 text-xs text-rose-600 font-medium flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <span id="errorNominalText">Nominal tidak boleh bernilai minus!</span>
+          </p>
+        </div>
+
+        <!-- Section 4: Catatan Opsional -->
+        <div>
+          <label for="keterangan" class="block text-xs font-semibold text-slate-700 mb-1">
+            Catatan Tambahan (Opsional)
+          </label>
+          <input type="text" id="keterangan" placeholder="Contoh: Titip tetangga / Dobel jimpitan" 
+                 class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 text-xs text-slate-700 transition-all">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" id="btnSubmit" 
+                class="w-full mt-2 py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition-all transform active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed">
+          <!-- Spinner -->
+          <svg id="btnSpinner" class="hidden animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span id="btnText" class="text-sm tracking-wide">SIMPAN JIMPITAN</span>
+        </button>
+
+      </form>
+
+      <!-- Section Feedback / Sukses Transaksi -->
+      <div id="successCard" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center space-y-3 animate-fade-in">
+        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-emerald-900">Jimpitan Berhasil Dicatat!</h3>
+          <p id="successSummary" class="text-xs text-emerald-700 mt-1 font-medium leading-relaxed">
+            Data telah tersimpan ke database dan diteruskan ke rekap otomatis.
+          </p>
+        </div>
+        <div class="bg-white/80 rounded-lg p-2.5 text-xs text-slate-600 border border-emerald-100 flex justify-around">
+          <div>
+            <span class="block text-[10px] text-slate-400">Kode Rumah</span>
+            <span id="resHouseId" class="font-bold text-slate-800 font-mono">-</span>
+          </div>
+          <div>
+            <span class="block text-[10px] text-slate-400">Nominal</span>
+            <span id="resNominal" class="font-bold text-emerald-700">-</span>
+          </div>
+          <div>
+            <span class="block text-[10px] text-slate-400">Waktu</span>
+            <span id="resTime" class="font-semibold text-slate-700">-</span>
+          </div>
+        </div>
+        <button type="button" id="btnNext" 
+                class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow transition-colors flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+          </svg>
+          Scan Rumah Berikutnya
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Footer Info -->
+    <div class="bg-slate-50 border-t border-slate-200/80 px-5 py-3 text-center text-[11px] text-slate-400 flex justify-between items-center">
+      <span>RT 13 Bersatu & Guyub</span>
+      <span class="flex items-center gap-1 text-emerald-600 font-medium">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        Sistem Siap
+      </span>
+    </div>
+  </div>
+
+  <!-- Client-Side Application Logic -->
+  <script>
+    (function () {
+      // 1. Inisialisasi Konfigurasi
+      const config = window.APP_CONFIG || {
+        SUPABASE_URL: "",
+        SUPABASE_ANON_KEY: "",
+        RT_TITLE: "Ronda Warga RT 13",
+        RT_SUBTITLE: "Pencatatan Jimpitan Mandiri via QR Code",
+        ENABLE_MOCK_FALLBACK: true
+      };
+
+      if (config.RT_TITLE) document.getElementById('headerTitle').innerText = config.RT_TITLE;
+      if (config.RT_SUBTITLE) document.getElementById('headerSubtitle').innerText = config.RT_SUBTITLE;
+
+      // Cek apakah Supabase kredensial tersedia
+      const isSupabaseConfigured = Boolean(
+        config.SUPABASE_URL && 
+        config.SUPABASE_URL.trim() !== "" && 
+        !config.SUPABASE_URL.includes("YOUR_SUPABASE") &&
+        config.SUPABASE_ANON_KEY && 
+        config.SUPABASE_ANON_KEY.trim() !== ""
+      );
+
+      if (!isSupabaseConfigured) {
+        document.getElementById('mockBanner').classList.remove('hidden');
+      }
+
+      // Inisialisasi Supabase Client jika kredensial ada
+      let supabaseClient = null;
+      if (isSupabaseConfigured && window.supabase) {
+        try {
+          supabaseClient = window.supabase.createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY);
+        } catch (e) {
+          console.error("Gagal menginisialisasi Supabase client:", e);
+        }
+      }
+
+      // Mock database warga untuk pengujian lokal
+      const MOCK_WARGA = {
+        'A-01': { id: 'A-01', nama_pemilik: 'Bpk. Bambang Pamungkas', alamat: 'Jl. Melati Blok A No. 1, RT 13' },
+        'A-02': { id: 'A-02', nama_pemilik: 'Bpk. Joko Santoso', alamat: 'Jl. Melati Blok A No. 2, RT 13' },
+        'A-03': { id: 'A-03', nama_pemilik: 'Ibu Siti Aminah', alamat: 'Jl. Melati Blok A No. 3, RT 13' },
+        'A-04': { id: 'A-04', nama_pemilik: 'Bpk. Hendra Setiawan', alamat: 'Jl. Melati Blok A No. 4, RT 13' },
+        'A-05': { id: 'A-05', nama_pemilik: 'Bpk. Agus Prasetyo', alamat: 'Jl. Melati Blok A No. 5, RT 13' },
+        'B-01': { id: 'B-01', nama_pemilik: 'Bpk. Dedi Suryadi', alamat: 'Jl. Mawar Blok B No. 1, RT 13' },
+        'B-02': { id: 'B-02', nama_pemilik: 'Ibu Nurhayati', alamat: 'Jl. Mawar Blok B No. 2, RT 13' },
+        'B-03': { id: 'B-03', nama_pemilik: 'Bpk. Budi Waluyo', alamat: 'Jl. Mawar Blok B No. 3, RT 13' }
+      };
+
+      // State Aplikasi
+      let currentHouse = null;
+      let currentHouseId = null;
+
+      // Elemen DOM
+      const houseBadge = document.getElementById('houseBadge');
+      const wargaLoading = document.getElementById('wargaLoading');
+      const wargaInfo = document.getElementById('wargaInfo');
+      const wargaNama = document.getElementById('wargaNama');
+      const wargaAlamatText = document.getElementById('wargaAlamatText');
+      const wargaNotFound = document.getElementById('wargaNotFound');
+      const wargaErrorMessage = document.getElementById('wargaErrorMessage');
+      const manualHouseId = document.getElementById('manualHouseId');
+      const btnCariRumah = document.getElementById('btnCariRumah');
+
+      const namaPetugasInput = document.getElementById('namaPetugas');
+      const inputNominal = document.getElementById('inputNominal');
+      const errorNominal = document.getElementById('errorNominal');
+      const errorNominalText = document.getElementById('errorNominalText');
+      const keteranganInput = document.getElementById('keterangan');
+      const quickBtns = document.querySelectorAll('.btn-quick');
+
+      const btnSubmit = document.getElementById('btnSubmit');
+      const btnSpinner = document.getElementById('btnSpinner');
+      const btnText = document.getElementById('btnText');
+      const successCard = document.getElementById('successCard');
+      const btnNext = document.getElementById('btnNext');
+
+      // 2. Muat Nama Petugas dari localStorage
+      const savedPetugas = localStorage.getItem('petugas_ronda_nama');
+      if (savedPetugas) {
+        namaPetugasInput.value = savedPetugas;
+      }
+      namaPetugasInput.addEventListener('input', function () {
+        localStorage.setItem('petugas_ronda_nama', this.value.trim());
+      });
+
+      // 3. Baca Parameter URL (?id=A-01)
+      function getHouseIdFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('id') || urlParams.get('ID') || urlParams.get('rumah');
+      }
+
+      // 4. Ambil Data Rumah dari Supabase (atau Mock)
+      async function fetchHouseData(id) {
+        if (!id) {
+          showWargaError('ID rumah tidak terdeteksi. Silakan scan QR code rumah atau masukkan ID di bawah.');
+          return;
+        }
+
+        const cleanId = id.trim().toUpperCase();
+        currentHouseId = cleanId;
+        houseBadge.innerText = cleanId;
+
+        // Tampilkan loading skeleton
+        wargaLoading.classList.remove('hidden');
+        wargaInfo.classList.add('hidden');
+        wargaNotFound.classList.add('hidden');
+
+        try {
+          let data = null;
+
+          if (supabaseClient) {
+            // Ambil dari Supabase database
+            const { data: dbData, error } = await supabaseClient
+              .from('warga')
+              .select('*')
+              .eq('id', cleanId)
+              .maybeSingle();
+
+            if (error) {
+              console.error('Supabase query error:', error);
+              throw error;
+            }
+            data = dbData;
+          } else {
+            // Gunakan Mock data fallback
+            await new Promise(res => setTimeout(res, 300)); // Simulasi network delay
+            data = MOCK_WARGA[cleanId] || null;
+          }
+
+          if (data) {
+            currentHouse = data;
+            wargaNama.innerText = data.nama_pemilik;
+            wargaAlamatText.innerText = data.alamat || ('RT ' + (data.rt || '13'));
+            wargaLoading.classList.add('hidden');
+            wargaInfo.classList.remove('hidden');
+            btnSubmit.disabled = false;
+          } else {
+            showWargaError(`Data rumah dengan kode "${cleanId}" tidak ditemukan di database.`);
+          }
+        } catch (err) {
+          console.error(err);
+          showWargaError('Gagal memuat data warga. Periksa koneksi internet atau konfigurasi Supabase.');
+        }
+      }
+
+      function showWargaError(message) {
+        currentHouse = null;
+        wargaLoading.classList.add('hidden');
+        wargaInfo.classList.add('hidden');
+        wargaNotFound.classList.remove('hidden');
+        wargaErrorMessage.innerText = message;
+        houseBadge.innerText = currentHouseId || 'TIDAK VALID';
+        btnSubmit.disabled = true;
+      }
+
+      // Handler Pencarian Manual ID Rumah
+      btnCariRumah.addEventListener('click', () => {
+        const val = manualHouseId.value.trim();
+        if (val) {
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set('id', val);
+          window.history.pushState({}, '', newUrl);
+          fetchHouseData(val);
+        }
+      });
+      manualHouseId.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          btnCariRumah.click();
+        }
+      });
+
+      // 5. Interaksi Pilihan Nominal Cepat
+      quickBtns.forEach(btn => {
+        btn.addEventListener('click', function () {
+          const val = parseInt(this.getAttribute('data-val'), 10);
+          inputNominal.value = val;
+          highlightQuickButton(val);
+          validateNominal();
+
+          // Jika pilih 0 (Nihil), bantu isi catatan otomatis jika masih kosong
+          if (val === 0 && !keteranganInput.value) {
+            keteranganInput.placeholder = "Otomatis: Nihil / Belum ada jimpitan";
+          }
+        });
+      });
+
+      function highlightQuickButton(amount) {
+        quickBtns.forEach(btn => {
+          const val = parseInt(btn.getAttribute('data-val'), 10);
+          if (val === amount) {
+            btn.className = 'btn-quick py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all border-emerald-500 bg-emerald-50 text-emerald-700 ring-2 ring-emerald-500/20 active:scale-95';
+          } else {
+            btn.className = 'btn-quick py-2 px-1 text-center rounded-lg border text-xs font-semibold transition-all border-slate-200 bg-slate-50 text-slate-700 hover:border-emerald-400 active:scale-95';
+          }
+        });
+      }
+
+      inputNominal.addEventListener('input', function () {
+        const val = parseInt(this.value, 10);
+        highlightQuickButton(isNaN(val) ? null : val);
+        validateNominal();
+      });
+
+      // 6. Validasi Input Nominal (Tidak Boleh Minus; Nilai 0 Diperbolehkan)
+      function validateNominal() {
+        const raw = inputNominal.value;
+        if (raw === '' || isNaN(Number(raw))) {
+          errorNominal.classList.remove('hidden');
+          errorNominalText.innerText = 'Nominal harus diisi dengan angka (minimal 0).';
+          inputNominal.classList.add('border-rose-500', 'focus:ring-rose-500');
+          return false;
+        }
+
+        const val = Number(raw);
+        if (val < 0) {
+          errorNominal.classList.remove('hidden');
+          errorNominalText.innerText = 'Nominal tidak boleh bernilai minus (< 0)!';
+          inputNominal.classList.add('border-rose-500', 'focus:ring-rose-500');
+          return false;
+        }
+
+        // Lolos validasi (0 atau lebih besar)
+        errorNominal.classList.add('hidden');
+        inputNominal.classList.remove('border-rose-500', 'focus:ring-rose-500');
+        return true;
+      }
+
+      // Format Angka Rupiah
+      function formatRupiah(num) {
+        if (num === 0) return "Rp 0 (Nihil)";
+        return 'Rp ' + Number(num).toLocaleString('id-ID');
+      }
+
+      // 7. Simpan Transaksi Jimpitan
+      btnSubmit.addEventListener('click', async function () {
+        if (!validateNominal()) {
+          inputNominal.focus();
+          return;
+        }
+
+        const petugas = namaPetugasInput.value.trim();
+        if (!petugas) {
+          alert('Mohon masukkan nama petugas ronda terlebih dahulu.');
+          namaPetugasInput.focus();
+          return;
+        }
+
+        if (!currentHouse) {
+          alert('Identitas rumah belum valid. Silakan scan QR code rumah yang valid.');
+          return;
+        }
+
+        const nominal = parseInt(inputNominal.value, 10);
+        let ket = keteranganInput.value.trim();
+        if (nominal === 0 && !ket) {
+          ket = "Nihil / Belum isi";
+        }
+
+        // Set state loading button
+        btnSubmit.disabled = true;
+        btnSpinner.classList.remove('hidden');
+        btnText.innerText = 'MENYIMPAN...';
+
+        const payload = {
+          kode_rumah: currentHouse.id,
+          nama_warga: currentHouse.nama_pemilik,
+          nama_petugas: petugas,
+          nominal: nominal,
+          metode: 'Tunai',
+          keterangan: ket || null,
+          created_at: new Date().toISOString()
+        };
+
+        try {
+          if (supabaseClient) {
+            // Simpan ke Supabase tabel 'jimpitan'
+            const { data, error } = await supabaseClient
+              .from('jimpitan')
+              .insert([payload])
+              .select();
+
+            if (error) {
+              console.error('Gagal simpan ke Supabase:', error);
+              throw new Error(error.message || 'Gagal menyimpan ke database Supabase');
+            }
+          } else {
+            // Simulasi Mock
+            await new Promise(res => setTimeout(res, 500));
+            console.log('[MOCK INSERT] Transaksi tersimpan:', payload);
+          }
+
+          // Feedback Sukses
+          document.getElementById('resHouseId').innerText = currentHouse.id;
+          document.getElementById('resNominal').innerText = formatRupiah(nominal);
+          document.getElementById('resTime').innerText = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+          
+          if (nominal === 0) {
+            document.getElementById('successSummary').innerText = `Tercatat status Nihil/Rp 0 untuk rumah ${currentHouse.nama_pemilik}.`;
+          } else {
+            document.getElementById('successSummary').innerText = `Tercatat iuran ${formatRupiah(nominal)} untuk rumah ${currentHouse.nama_pemilik}.`;
+          }
+
+          // Haptic feedback jika didukung perangkat
+          if (navigator.vibrate) {
+            navigator.vibrate([40, 60, 40]);
+          }
+
+          successCard.classList.remove('hidden');
+          // Scroll halus ke kartu sukses
+          successCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        } catch (err) {
+          alert('Terjadi kesalahan saat menyimpan transaksi:\n' + err.message);
+        } finally {
+          btnSubmit.disabled = false;
+          btnSpinner.classList.add('hidden');
+          btnText.innerText = 'SIMPAN JIMPITAN';
+        }
+      });
+
+      // Tombol Scan Rumah Berikutnya
+      btnNext.addEventListener('click', function () {
+        // Reset form & sembunyikan kartu sukses
+        successCard.classList.add('hidden');
+        keteranganInput.value = '';
+        inputNominal.value = '2000';
+        highlightQuickButton(2000);
+
+        // Jika dibuka dari aplikasi scanner web/kamera, arahkan kembali untuk siap scan
+        // Jika ada input manual, fokuskan
+        manualHouseId.value = '';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Jalankan inisialisasi awal saat halaman dibuka
+      const initialId = getHouseIdFromURL();
+      fetchHouseData(initialId);
+
+    })();
+  </script>
+</body>
+</html>
+
